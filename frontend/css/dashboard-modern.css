@@ -1199,6 +1199,11 @@ table td {
   }
 }
 
+/* ===== HAMBURGER BUTTON (Hidden by default, shown on mobile) ===== */
+.hamburger-btn {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .main-content {
     padding: 32px 24px;
@@ -1268,5 +1273,78 @@ table td {
   .storage-widget {
     padding: 24px;
     gap: 24px;
+  }
+
+  /* Hamburger Menu Mobile - Show on mobile */
+  .hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 0;
+    order: -1;
+  }
+
+  .hamburger-btn span {
+    width: 24px;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hamburger-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+  }
+
+  .hamburger-btn.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+  }
+
+  /* Sidebar overlay for mobile */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 95;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+  }
+
+  /* Mobile sidebar active state */
+  .sidebar.active {
+    left: 0;
+  }
+
+  .navbar-top .logout-btn {
+    display: none;
+  }
+
+  .navbar-top .welcome-text {
+    display: none;
+  }
+
+  .navbar-top .user-avatar {
+    display: none;
+  }
+
+  .navbar-brand h2 {
+    font-size: 16px;
   }
 }

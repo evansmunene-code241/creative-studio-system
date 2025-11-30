@@ -3,6 +3,32 @@ if (!checkAuth()) {
   window.location.href = 'index.html';
 }
 
+// Mobile hamburger menu functions
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+
+  sidebar.classList.toggle('active');
+  overlay.classList.toggle('active');
+  hamburgerBtn.classList.toggle('active');
+}
+
+function closeSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+  hamburgerBtn.classList.remove('active');
+}
+
+// Close sidebar when a nav item is clicked
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', closeSidebar);
+});
+
 let storageChart = null;
 let overviewStorageChart = null;
 let allFiles = [];
