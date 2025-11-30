@@ -1206,7 +1206,7 @@ table td {
 
 @media (max-width: 768px) {
   .main-content {
-    padding: 32px 24px;
+    padding: 20px 16px;
     margin-left: 0;
   }
 
@@ -1223,56 +1223,105 @@ table td {
   }
 
   .metric-card {
-    padding: 20px;
-    min-height: 140px;
+    padding: 16px;
+    min-height: 120px;
   }
 
   .metric-icon {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
   }
 
   .metric-value {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .metric-label {
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .page-header {
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
 
   .page-header h1 {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .metrics-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-
-  .dashboard-section {
-    margin-bottom: 32px;
-  }
-
-  .section-header {
+    gap: 12px;
     margin-bottom: 24px;
   }
 
+  .dashboard-section {
+    margin-bottom: 24px;
+  }
+
+  .section-header {
+    margin-bottom: 16px;
+  }
+
   .section-header h2 {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .card {
-    padding: 20px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .card-header {
+    margin-bottom: 16px;
   }
 
   .storage-widget {
-    padding: 24px;
-    gap: 24px;
+    padding: 16px;
+    gap: 16px;
+    grid-template-columns: 1fr;
+  }
+
+  .storage-chart-wrapper {
+    height: 200px;
+  }
+
+  .overview-header {
+    margin-bottom: 20px;
+  }
+
+  .overview-header h1 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .overview-header p {
+    font-size: 13px;
+  }
+
+  .upload-zone {
+    padding: 32px 20px;
+  }
+
+  .upload-zone svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .upload-title {
+    font-size: 14px;
+  }
+
+  .upload-subtitle {
+    font-size: 12px;
+  }
+
+  .files-controls {
+    flex-direction: column;
+  }
+
+  .search-input,
+  .sort-select {
+    width: 100%;
   }
 
   /* Hamburger Menu Mobile - Show on mobile */
