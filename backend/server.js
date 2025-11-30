@@ -70,7 +70,7 @@ app.get('/financial', (req, res) => {
 });
 
 // Serve static files (CSS, JS, images)
-app.use(express.static('../frontend'));
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Error handling
 app.use((err, req, res, next) => {
