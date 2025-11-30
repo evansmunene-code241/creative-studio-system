@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative Studio - Admin Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard">
+  <div class="navbar" style="background: linear-gradient(90deg, #ffffff 0%, #f8fafc 100%); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); border-bottom: 1px solid #e2e8f0;">
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 20px;">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 700; color: #1e293b;">Admin Dashboard</h2>
+      <div class="nav-buttons" style="display: flex; align-items: center; gap: 16px;">
+        <span id="adminUsername" style="color: #475569; font-weight: 500;"></span>
+        <button onclick="logout()" style="padding: 9px 18px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.background='#dc2626'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.3)'" onmouseout="this.style.background='#ef4444'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <nav class="admin-nav">
+      <p class="nav-section-title">
+        <i class="fas fa-chart-line"></i> DASHBOARD
+      </p>
+      <ul>
+         <li><a href="#" onclick="showSection('overview')" class="nav-link active">
+           <i class="fas fa-home"></i>
+           Overview
+         </a></li>
+         <li><a href="#" onclick="showSection('projects')" class="nav-link">
+           <i class="fas fa-project-diagram"></i>
+           Projects
+         </a></li>
+         <li><a href="#" onclick="showSection('users')" class="nav-link">
+           <i class="fas fa-users"></i>
+           Users & Roles
+         </a></li>
+         <li><a href="#" onclick="showSection('tasks')" class="nav-link">
+           <i class="fas fa-tasks"></i>
+           Tasks
+         </a></li>
+      </ul>
+
+      <p class="nav-section-title">
+        <i class="fas fa-briefcase"></i> OPERATIONS
+      </p>
+      <ul>
+         <li><a href="#" onclick="showSection('financials')" class="nav-link">
+           <i class="fas fa-money-bill-wave"></i>
+           Financial
+         </a></li>
+         <li><a href="#" onclick="showSection('logs')" class="nav-link">
+           <i class="fas fa-history"></i>
+           Logs
+         </a></li>
+       </ul>
+    </nav>
+    <div class="admin-tools-section">
+      <p class="admin-tools-title">
+        <i class="fas fa-tools"></i> ADMIN TOOLS
+      </p>
+       <ul class="admin-tools-list">
+         <li><a href="/financial" class="admin-tool-link">
+           <i class="fas fa-chart-bar"></i>
+           Financial Dashboard
+         </a></li>
+         <li><a href="/client" class="admin-tool-link">
+           <i class="fas fa-handshake"></i>
+           Client Portal
+         </a></li>
+         <li><a href="/dashboard" class="admin-tool-link">
+           <i class="fas fa-layer-group"></i>
+           Team Dashboard
+         </a></li>
+       </ul>
+      <p class="admin-tools-note">Admin only</p>
+    </div>
+  </div>
+
+  <div class="content admin-content">
+    <!-- OVERVIEW SECTION -->
+    <section id="overview-section" class="section active">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h2 style="margin: 0;">Dashboard Overview</h2>
+        <div class="dashboard-shortcuts">
+          <button class="quick-action-btn" onclick="showSection('projects'); showCreateProjectModal()" title="Create new project">
+            <i class="fas fa-plus-circle"></i> New Project
+          </button>
+          <button class="quick-action-btn" onclick="showSection('users')" title="Approve pending users">
+            <i class="fas fa-check-circle"></i> Approve Users
+          </button>
+        </div>
+      </div>
+      
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-project-diagram"></i>
+          </div>
+          <h4>Active Projects</h4>
+          <p class="stat-number" id="activeProjectsCount">0</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h4>Active Users</h4>
+          <p class="stat-number" id="activeUsersCount">0</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-tasks"></i>
+          </div>
+          <h4>Pending Tasks</h4>
+          <p class="stat-number" id="pendingTasksCount">0</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-database"></i>
+          </div>
+          <h4>Storage Usage</h4>
+          <p class="stat-number" id="storageUsagePercent">0%</p>
+        </div>
+      </div>
+
+      <!-- Storage Chart -->
+      <div class="card">
+        <h3>Total Storage Usage</h3>
+        <div style="height: 300px; position: relative; margin-bottom: 20px;">
+          <canvas id="adminStorageChart"></canvas>
+        </div>
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+          <p style="margin: 8px 0; font-size: 14px; color: #64748b;">
+            <strong id="totalUsersText">0</strong> Users
+          </p>
+          <p style="margin: 8px 0; font-size: 14px; color: #64748b;">
+            <strong id="totalStorageText">0 MB</strong> / <strong id="maxStorageText">0 MB</strong> Used
+          </p>
+          <p style="margin: 8px 0; font-size: 14px; color: #64748b;">
+            Overall: <strong id="overallPercentageText">0%</strong>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section id="projects-section" class="section">
+      <h2>Projects Management</h2>
+      
+      <div style="margin-bottom: 20px;">
+        <button onclick="showCreateProjectModal()" class="btn btn-primary">+ New Project</button>
+      </div>
+
+      <div class="card">
+        <h3>Active Projects</h3>
+        <div id="projectsList">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading projects...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create/Edit Project Modal -->
+      <div id="projectModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <span class="close" onclick="closeProjectModal()">&times;</span>
+          <h3>New Project</h3>
+          <form id="projectForm" onsubmit="saveProject(event)">
+            <div class="form-group">
+              <label>Project Name *</label>
+              <input type="text" id="projectName" required>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="projectDescription"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Client</label>
+              <select id="projectClient">
+                <option value="">Select Client</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" id="projectStartDate">
+              </div>
+              <div class="form-group">
+                <label>Deadline</label>
+                <input type="date" id="projectDeadline">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Priority</label>
+                <select id="projectPriority">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Budget</label>
+                <input type="number" id="projectBudget" min="0" step="0.01">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Assign To</label>
+              <select id="projectAssignTo">
+                <option value="">Select Team Member</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Project</button>
+              <button type="button" class="btn btn-secondary" onclick="closeProjectModal()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- USERS & ROLES SECTION -->
+    <section id="users-section" class="section">
+      <h2>Users & Role Management</h2>
+      
+      <!-- Pending Approvals -->
+      <div class="card">
+        <h3>Pending Approvals</h3>
+        <div id="alertContainer"></div>
+        <div id="pendingUsers">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading pending users...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registered Users with Roles -->
+      <div class="card">
+        <h3>Registered Users</h3>
+        <div style="margin-bottom: 15px;">
+          <select id="roleFilter" onchange="filterUsersByRole()" style="padding: 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+            <option value="">All Roles</option>
+            <option value="admin">Admin</option>
+            <option value="manager">Manager</option>
+            <option value="team-member">Team Member</option>
+            <option value="client">Client</option>
+            <option value="guest">Guest</option>
+          </select>
+        </div>
+        <div id="allUsers">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading users...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASKS SECTION -->
+    <section id="tasks-section" class="section">
+      <h2>Task Management</h2>
+      
+      <div class="card">
+        <h3>Recent Tasks</h3>
+        <div style="margin-bottom: 15px;">
+          <select id="taskStatusFilter" onchange="filterTasksByStatus()" style="padding: 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+            <option value="">All Status</option>
+            <option value="todo">To Do</option>
+            <option value="in-progress">In Progress</option>
+            <option value="review">Review</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div id="tasksList">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading tasks...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINANCIALS SECTION -->
+     <section id="financials-section" class="section">
+       <h2>Financial Overview</h2>
+       
+       <!-- Financial Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h4>Total Revenue</h4>
+          <p class="stat-number" id="totalRevenueAmount">KES 0</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-hourglass-half"></i>
+          </div>
+          <h4>Pending Payment</h4>
+          <p class="stat-number" id="totalPendingAmount">KES 0</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <h4>Total Expenses</h4>
+          <p class="stat-number" id="totalExpensesAmount">KES 0</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+          <h4>Net Profit</h4>
+          <p class="stat-number" id="totalProfitAmount">KES 0</p>
+        </div>
+      </div>
+
+      <!-- Financial Tabs -->
+      <div class="card" style="margin-top: 30px;">
+        <div class="tabs-container">
+          <div class="tab-buttons">
+            <button class="tab-button active" onclick="switchFinancialTab('invoices')">
+              <i class="fas fa-receipt"></i> Invoices
+            </button>
+            <button class="tab-button" onclick="switchFinancialTab('expenses')">
+              <i class="fas fa-receipt"></i> Expenses
+            </button>
+            <button class="tab-button" onclick="switchFinancialTab('payments')">
+              <i class="fas fa-money-check-alt"></i> Payments
+            </button>
+          </div>
+
+          <!-- Invoices Tab -->
+          <div id="invoices-tab" class="tab-content active">
+            <h3>Invoice Summary</h3>
+            <div style="padding: 20px 0;">
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>Total Invoices:</span>
+                <strong style="font-size: 18px;" id="totalInvoicesCount">0</strong>
+              </p>
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>✅ Paid:</span>
+                <strong style="color: #22c55e; font-size: 18px;" id="paidInvoicesCount">0</strong>
+              </p>
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>⏳ Pending:</span>
+                <strong style="color: #f59e0b; font-size: 18px;" id="pendingInvoicesCount">0</strong>
+              </p>
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>⚠️ Overdue:</span>
+                <strong style="color: #ef4444; font-size: 18px;" id="overdueInvoicesCount">0</strong>
+              </p>
+            </div>
+            <a href="/financial" style="display: inline-block; margin-top: 15px; padding: 10px 16px; background: #3b82f6; color: white; text-decoration: none; font-weight: 600; border-radius: 6px;">Manage Invoices</a>
+          </div>
+
+          <!-- Expenses Tab -->
+          <div id="expenses-tab" class="tab-content">
+            <h3>Expense Summary</h3>
+            <div style="padding: 20px 0;">
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>Total Expenses:</span>
+                <strong style="font-size: 18px;" id="totalExpensesCount">0</strong>
+              </p>
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>This Month:</span>
+                <strong style="font-size: 18px;" id="monthExpensesAmount">KES 0</strong>
+              </p>
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>Top Category:</span>
+                <strong style="font-size: 18px;" id="topExpenseCategory">N/A</strong>
+              </p>
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>Category Total:</span>
+                <strong style="font-size: 18px;" id="topExpenseCategoryAmount">KES 0</strong>
+              </p>
+            </div>
+            <a href="/financial" style="display: inline-block; margin-top: 15px; padding: 10px 16px; background: #3b82f6; color: white; text-decoration: none; font-weight: 600; border-radius: 6px;">Manage Expenses</a>
+          </div>
+
+          <!-- Payments Tab -->
+          <div id="payments-tab" class="tab-content">
+            <h3>Payment Summary</h3>
+            <div style="padding: 20px 0;">
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>Total Payments:</span>
+                <strong style="font-size: 18px;" id="totalPaymentsCount">0</strong>
+              </p>
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>This Month:</span>
+                <strong style="font-size: 18px;" id="monthPaymentsCount">0</strong>
+              </p>
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>This Month Total:</span>
+                <strong style="font-size: 18px;" id="monthPaymentsAmount">KES 0</strong>
+              </p>
+              <p style="margin: 15px 0; display: flex; justify-content: space-between; font-size: 15px;">
+                <span>Collection Rate:</span>
+                <strong style="font-size: 18px; color: #10b981;" id="collectionRate">0%</strong>
+              </p>
+            </div>
+            <a href="/financial" style="display: inline-block; margin-top: 15px; padding: 10px 16px; background: #3b82f6; color: white; text-decoration: none; font-weight: 600; border-radius: 6px;">Record Payments</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOGS SECTION -->
+    <section id="logs-section" class="section">
+      <h2>Activity & Audit Logs</h2>
+      
+      <!-- Backup History Card -->
+      <div class="card collapsible-card">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+            <i class="fas fa-chevron-down collapse-icon"></i>
+            <i class="fas fa-box" style="color: #667eea; font-size: 18px;"></i>
+            <h3 style="margin: 0;">Backup History</h3>
+            <span style="font-size: 12px; color: #999; margin-left: auto;">
+              <span id="backupCount">0</span> backups
+            </span>
+          </div>
+        </div>
+        <div class="collapsible-body" style="display: block;">
+          <div id="backupHistoryCard">
+            <div class="loading">
+              <div class="spinner"></div>
+              <p>Loading backup history...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit Logs Card -->
+      <div class="card collapsible-card">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+            <i class="fas fa-chevron-down collapse-icon"></i>
+            <i class="fas fa-history" style="color: #10b981; font-size: 18px;"></i>
+            <h3 style="margin: 0;">Activity Logs</h3>
+          </div>
+        </div>
+        <div class="collapsible-body" style="display: none;">
+          <div id="auditLogs">
+            <div class="loading">
+              <div class="spinner"></div>
+              <p>Loading activity logs...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/form-validation.js"></script>
+  <script src="js/admin-projects.js"></script>
+  <script src="js/admin-roles.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

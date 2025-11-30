@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard - Creative Studio</title>
+    <link rel="stylesheet" href="css/financial-modern.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-content">
+                <h1 class="logo"><i class="fas fa-chart-pie"></i> Financial Dashboard</h1>
+                <ul class="nav-links">
+                    <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-menu">
+                <h3><i class="fas fa-money-bill-wave"></i> Financial</h3>
+                <ul>
+                    <li><a href="#" class="menu-item active" data-section="overview"><i class="fas fa-chart-line"></i> Overview</a></li>
+                    <li><a href="#" class="menu-item" data-section="invoices"><i class="fas fa-receipt"></i> Invoices</a></li>
+                    <li><a href="#" class="menu-item" data-section="payments"><i class="fas fa-credit-card"></i> Payments</a></li>
+                    <li><a href="#" class="menu-item" data-section="expenses"><i class="fas fa-wallet"></i> Expenses</a></li>
+                    <li><a href="#" class="menu-item" data-section="budgets"><i class="fas fa-calculator"></i> Budgets</a></li>
+                    <li><a href="#" class="menu-item" data-section="reports"><i class="fas fa-file-alt"></i> Reports</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Overview Section -->
+            <section id="overview" class="content-section active">
+                <h2>Financial Overview</h2>
+
+                <!-- Period Selector -->
+                <div class="period-selector">
+                    <input type="month" id="periodMonth" value="" title="Select month">
+                    <button class="btn btn-primary" onclick="loadDashboard()"><i class="fas fa-refresh"></i> Refresh</button>
+                </div>
+
+                <!-- Dashboard Summary -->
+                <div class="dashboard-grid">
+                    <div class="card metric-card">
+                         <div class="metric-header">Total Revenue</div>
+                         <div class="metric-value" id="totalRevenue">KES 0</div>
+                         <div class="metric-detail">From invoices</div>
+                     </div>
+                     <div class="card metric-card">
+                         <div class="metric-header">Total Paid</div>
+                         <div class="metric-value" id="totalPaid">KES 0</div>
+                         <div class="metric-detail">Completed payments</div>
+                     </div>
+                     <div class="card metric-card">
+                         <div class="metric-header">Pending Payment</div>
+                         <div class="metric-value" id="totalPending">KES 0</div>
+                         <div class="metric-detail">Awaiting payment</div>
+                     </div>
+                     <div class="card metric-card">
+                         <div class="metric-header">Total Expenses</div>
+                         <div class="metric-value" id="totalExpenses">KES 0</div>
+                         <div class="metric-detail">Project costs</div>
+                     </div>
+                </div>
+
+                <!-- Profit Summary -->
+                <div class="card profit-card">
+                    <h3>Profit Summary</h3>
+                    <div class="profit-grid">
+                        <div class="profit-item">
+                             <span class="label">Total Profit:</span>
+                             <span class="value" id="totalProfit">KES 0</span>
+                         </div>
+                         <div class="profit-item">
+                             <span class="label">Profit Margin:</span>
+                             <span class="value" id="profitMargin">0%</span>
+                         </div>
+                         <div class="profit-item">
+                             <span class="label">Tax (10%):</span>
+                             <span class="value" id="taxAmount">KES 0</span>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="card chart-container">
+                        <h3>Monthly Revenue</h3>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="card chart-container">
+                        <h3>Expense Breakdown</h3>
+                        <canvas id="expenseChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Cash Flow Chart -->
+                <div class="card chart-container full-width">
+                    <h3>12-Month Cash Flow</h3>
+                    <canvas id="cashFlowChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Invoices Section -->
+            <section id="invoices" class="content-section">
+                <h2>Invoice Management</h2>
+
+                <div class="section-toolbar">
+                    <button class="btn btn-primary" onclick="openInvoiceModal()"><i class="fas fa-plus"></i> Create Invoice</button>
+                    <input type="text" id="invoiceSearch" placeholder="Search invoices..." class="search-box" title="Search invoices">
+                </div>
+
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Client</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Issue Date</th>
+                                <th>Due Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoicesList">
+                            <tr><td colspan="7">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Invoice Modal -->
+                <div id="invoiceModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeInvoiceModal()">&times;</span>
+                        <h3>Create Invoice</h3>
+                        <form id="invoiceForm" onsubmit="saveInvoice(event)">
+                            <div class="form-group">
+                                <label>Client *</label>
+                                <select id="invoiceClientId" required>
+                                    <option value="">Select Client</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Project</label>
+                                <select id="invoiceProjectId">
+                                    <option value="">Select Project (Optional)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount *</label>
+                                <input type="number" id="invoiceAmount" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea id="invoiceDescription" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Issue Date *</label>
+                                <input type="date" id="invoiceIssueDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Due Date *</label>
+                                <input type="date" id="invoiceDueDate" required>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Create Invoice</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeInvoiceModal()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Payments Section -->
+            <section id="payments" class="content-section">
+                <h2>Payment Tracking</h2>
+
+                <div class="section-toolbar">
+                    <button class="btn btn-primary" onclick="openPaymentModal()"><i class="fas fa-plus"></i> Record Payment</button>
+                    <input type="text" id="paymentSearch" placeholder="Search payments..." class="search-box" title="Search payments">
+                </div>
+
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th>Status</th>
+                                <th>Payment Date</th>
+                                <th>Confirmation #</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsList">
+                            <tr><td colspan="7">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Payment Modal -->
+                <div id="paymentModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closePaymentModal()">&times;</span>
+                        <h3>Record Payment</h3>
+                        <form id="paymentForm" onsubmit="savePayment(event)">
+                            <div class="form-group">
+                                <label>Invoice *</label>
+                                <select id="paymentInvoiceId" required>
+                                    <option value="">Select Invoice</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount *</label>
+                                <input type="number" id="paymentAmount" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Payment Method</label>
+                                <select id="paymentMethod">
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                    <option value="credit_card">Credit Card</option>
+                                    <option value="check">Check</option>
+                                    <option value="cash">Cash</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Payment Date *</label>
+                                <input type="date" id="paymentDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirmation Number</label>
+                                <input type="text" id="confirmationNumber" placeholder="e.g., TXN123456">
+                            </div>
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <textarea id="paymentNotes" rows="3"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Record Payment</button>
+                                <button type="button" class="btn btn-secondary" onclick="closePaymentModal()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expenses Section -->
+            <section id="expenses" class="content-section">
+                <h2>Expense Management</h2>
+
+                <div class="section-toolbar">
+                    <button class="btn btn-primary" onclick="openExpenseModal()"><i class="fas fa-plus"></i> Record Expense</button>
+                    <input type="text" id="expenseSearch" placeholder="Search expenses..." class="search-box" title="Search expenses">
+                </div>
+
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Vendor</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expensesList">
+                            <tr><td colspan="7">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Expense Modal -->
+                <div id="expenseModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeExpenseModal()">&times;</span>
+                        <h3>Record Expense</h3>
+                        <form id="expenseForm" onsubmit="saveExpense(event)">
+                            <div class="form-group">
+                                <label>Project *</label>
+                                <select id="expenseProjectId" required>
+                                    <option value="">Select Project</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Category *</label>
+                                <select id="expenseCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="software">Software</option>
+                                    <option value="hardware">Hardware</option>
+                                    <option value="labor">Labor</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="travel">Travel</option>
+                                    <option value="office">Office</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea id="expenseDescription" rows="2"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount *</label>
+                                <input type="number" id="expenseAmount" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Vendor</label>
+                                <input type="text" id="expenseVendor" placeholder="Vendor name">
+                            </div>
+                            <div class="form-group">
+                                <label>Date *</label>
+                                <input type="date" id="expenseDate" required>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Record Expense</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeExpenseModal()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Budgets Section -->
+            <section id="budgets" class="content-section">
+                <h2>Budget Tracking</h2>
+
+                <div class="section-toolbar">
+                    <button class="btn btn-primary" onclick="openBudgetModal()"><i class="fas fa-plus"></i> Create Budget</button>
+                </div>
+
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Category</th>
+                                <th>Budget</th>
+                                <th>Spent</th>
+                                <th>Remaining</th>
+                                <th>% Used</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="budgetsList">
+                            <tr><td colspan="8">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Budget Modal -->
+                <div id="budgetModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeBudgetModal()">&times;</span>
+                        <h3>Create Budget</h3>
+                        <form id="budgetForm" onsubmit="saveBudget(event)">
+                            <div class="form-group">
+                                <label>Project *</label>
+                                <select id="budgetProjectId" required>
+                                    <option value="">Select Project</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Budget Amount *</label>
+                                <input type="number" id="budgetAmount" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select id="budgetCategory">
+                                    <option value="general">General</option>
+                                    <option value="software">Software</option>
+                                    <option value="hardware">Hardware</option>
+                                    <option value="labor">Labor</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Create Budget</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeBudgetModal()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="content-section">
+                <h2>Financial Reports</h2>
+
+                <div class="section-toolbar">
+                    <button class="btn btn-primary" onclick="openReportModal()"><i class="fas fa-plus"></i> Generate Report</button>
+                </div>
+
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Report Type</th>
+                                <th>Period</th>
+                                <th>Revenue</th>
+                                <th>Expenses</th>
+                                <th>Profit</th>
+                                <th>Margin</th>
+                                <th>Generated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsList">
+                            <tr><td colspan="8">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Report Modal -->
+                <div id="reportModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeReportModal()">&times;</span>
+                        <h3>Generate Financial Report</h3>
+                        <form id="reportForm" onsubmit="saveReport(event)">
+                            <div class="form-group">
+                                <label>Report Type *</label>
+                                <select id="reportType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="revenue">Revenue Report</option>
+                                    <option value="expense">Expense Report</option>
+                                    <option value="profit">Profit & Loss</option>
+                                    <option value="cash_flow">Cash Flow</option>
+                                    <option value="tax">Tax Report</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Period *</label>
+                                <select id="reportPeriod" required>
+                                    <option value="month">Monthly</option>
+                                    <option value="quarter">Quarterly</option>
+                                    <option value="year">Yearly</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" id="reportStartDate">
+                            </div>
+                            <div class="form-group">
+                                <label>End Date</label>
+                                <input type="date" id="reportEndDate">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Generate Report</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeReportModal()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Menu navigation
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = item.dataset.section;
+                
+                // Remove active from all items
+                document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+                // Add active to clicked item
+                item.classList.add('active');
+                
+                // Hide all sections
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+                // Show selected section
+                document.getElementById(section).classList.add('active');
+            });
+        });
+
+        // Logout
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        });
+    </script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/form-validation.js"></script>
+    <script src="js/financial.js"></script>
+</body>
+</html>

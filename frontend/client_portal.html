@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative Studio - Client Portal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/client-portal.css">
+</head>
+<body class="dashboard">
+  <div class="navbar">
+     <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+     <h2>Client Portal</h2>
+     <div class="nav-buttons">
+       <span id="clientUsername"></span>
+       <div class="notification-bell" onclick="toggleNotifications()">
+         🔔
+         <span id="notificationBadge" class="badge" style="display:none;">0</span>
+       </div>
+       <button onclick="logout()">Logout</button>
+     </div>
+   </div>
+
+  <!-- Notifications Panel -->
+  <div id="notificationsPanel" class="notifications-panel" style="display:none;">
+    <div class="panel-header">
+      <h3>Notifications</h3>
+      <button class="close-btn" onclick="toggleNotifications()">✕</button>
+    </div>
+    <div id="notificationsList" class="notifications-list">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading notifications...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <nav class="client-nav">
+      <ul>
+        <li><a href="#" onclick="showSection('projects')" class="nav-link active">📁 My Projects</a></li>
+        <li><a href="#" onclick="showSection('deliverables')" class="nav-link">📋 Deliverables</a></li>
+        <li><a href="#" onclick="showSection('messages')" class="nav-link">💬 Messages</a></li>
+        <li><a href="#" onclick="showSection('invoices')" class="nav-link">💰 Invoices</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="content client-content">
+    <!-- PROJECTS SECTION -->
+    <section id="projects-section" class="section active">
+      <h2>My Projects</h2>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h4>Active Projects</h4>
+          <p class="stat-number" id="activeProjectsCount">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Pending Approvals</h4>
+          <p class="stat-number" id="pendingApprovalsCount">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Completed Projects</h4>
+          <p class="stat-number" id="completedProjectsCount">0</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Project List</h3>
+        <div id="projectsList">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading projects...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DELIVERABLES SECTION -->
+    <section id="deliverables-section" class="section">
+      <h2>Deliverables & Approvals</h2>
+      
+      <div class="card">
+        <h3>Pending Deliverables</h3>
+        <div id="deliverablesList">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading deliverables...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deliverable Detail Modal -->
+      <div id="deliverableModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <span class="close" onclick="closeDeliverableModal()">&times;</span>
+          <h3 id="deliverableTitle">Deliverable Details</h3>
+          
+          <div id="deliverableDetail" style="margin-bottom: 20px;">
+            <div class="detail-row">
+              <label>Status:</label>
+              <span id="deliverableStatus" class="status-badge"></span>
+            </div>
+            <div class="detail-row">
+              <label>Due Date:</label>
+              <span id="deliverableDueDate"></span>
+            </div>
+            <div class="detail-row">
+              <label>Description:</label>
+              <p id="deliverableDescription"></p>
+            </div>
+            <div class="detail-row">
+              <label>Submission Notes:</label>
+              <p id="deliverableNotes"></p>
+            </div>
+          </div>
+
+          <div id="deliverableActions">
+            <!-- Actions will be populated based on status -->
+          </div>
+
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <h4>Approval/Feedback</h4>
+            <textarea id="approvalNotes" placeholder="Enter your feedback or approval notes..." style="width: 100%; min-height: 100px; padding: 10px; border: 1px solid #e2e8f0; border-radius: 4px; font-family: inherit;"></textarea>
+            <div style="margin-top: 15px;">
+              <button id="approveBtnModal" onclick="approveDeliverable()" class="btn btn-success" style="margin-right: 10px;">✓ Approve</button>
+              <button id="rejectBtnModal" onclick="rejectDeliverable()" class="btn btn-danger">✕ Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MESSAGES SECTION -->
+    <section id="messages-section" class="section">
+      <h2>Messages & Communication</h2>
+      
+      <div class="messages-container">
+        <div class="messages-list">
+          <h3>Conversations</h3>
+          <div id="conversationsList">
+            <div class="loading">
+              <div class="spinner"></div>
+              <p>Loading conversations...</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="messages-thread">
+          <h3>Chat</h3>
+          <div id="messageThread" class="message-thread">
+            <p style="text-align: center; color: #94a3b8; padding: 20px;">Select a conversation to start messaging</p>
+          </div>
+          <div class="message-input-area" style="display:none;" id="messageInputArea">
+            <textarea id="messageInput" placeholder="Type your message..." style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #e2e8f0; border-radius: 4px; font-family: inherit;"></textarea>
+            <button onclick="sendMessage()" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Send Message</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVOICES SECTION -->
+    <section id="invoices-section" class="section">
+      <h2>Invoices & Payments</h2>
+      
+      <div class="card">
+        <h3>Invoice Summary</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Total Invoiced</h4>
+            <p class="stat-number" id="totalInvoiced">$0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Paid</h4>
+            <p class="stat-number" id="totalPaid">$0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Pending</h4>
+            <p class="stat-number" id="totalPending">$0</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Invoices</h3>
+        <div id="invoicesList">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading invoices...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/client-portal.js"></script>
+</body>
+</html>

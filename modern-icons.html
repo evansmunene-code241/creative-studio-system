@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Professional Icons</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .icon-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .icon {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            transition: transform 0.2s ease;
+        }
+        .icon:hover {
+            transform: scale(1.05);
+        }
+        .database {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .document {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .trash {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        .code-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .code-section h3 {
+            margin-top: 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #333; margin-bottom: 30px;">Modern Professional Icons</h1>
+    
+    <div class="container">
+        <!-- Database Icon -->
+        <div class="icon-box">
+            <div class="icon database">
+                <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M28 12C19.7 12 13 15.6 13 20V36C13 40.4 19.7 44 28 44C36.3 44 43 40.4 43 36V20C43 15.6 36.3 12 28 12Z" fill="white" opacity="0.2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <ellipse cx="28" cy="20" rx="15" ry="8" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M13 28C13 32.4 19.7 36 28 36C36.3 36 43 32.4 43 28" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <label>Database</label>
+        </div>
+
+        <!-- Document Icon -->
+        <div class="icon-box">
+            <div class="icon document">
+                <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 12H36L44 20V44C44 45.1 43.1 46 42 46H16C14.9 46 14 45.1 14 44V14C14 12.9 14.9 12 16 12Z" fill="white" opacity="0.2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M36 12V20H44" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20 28H36M20 35H36M20 21H24" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <label>Documents</label>
+        </div>
+
+        <!-- Delete Icon -->
+        <div class="icon-box">
+            <div class="icon trash">
+                <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 14H34M19 22V42C19 43.1 19.9 44 21 44H35C36.1 44 37 43.1 37 42V22M24 28V38M32 28V38" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 22H38L36.5 45C36.3 46.7 34.7 48 33 48H23C21.3 48 19.7 46.7 19.5 45L18 22Z" fill="white" opacity="0.2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <label>Delete</label>
+        </div>
+    </div>
+
+    <div class="code-section">
+        <h3>Copy SVG Code</h3>
+        <p><strong>Database Icon:</strong></p>
+        <pre>&lt;svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;
+    &lt;path d="M28 12C19.7 12 13 15.6 13 20V36C13 40.4 19.7 44 28 44C36.3 44 43 40.4 43 36V20C43 15.6 36.3 12 28 12Z" fill="white" opacity="0.2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/&gt;
+    &lt;ellipse cx="28" cy="20" rx="15" ry="8" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/&gt;
+    &lt;path d="M13 28C13 32.4 19.7 36 28 36C36.3 36 43 32.4 43 28" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/&gt;
+&lt;/svg&gt;</pre>
+
+        <p><strong>Document Icon:</strong></p>
+        <pre>&lt;svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;
+    &lt;path d="M16 12H36L44 20V44C44 45.1 43.1 46 42 46H16C14.9 46 14 45.1 14 44V14C14 12.9 14.9 12 16 12Z" fill="white" opacity="0.2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/&gt;
+    &lt;path d="M36 12V20H44" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/&gt;
+    &lt;path d="M20 28H36M20 35H36M20 21H24" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/&gt;
+&lt;/svg&gt;</pre>
+
+        <p><strong>Delete Icon:</strong></p>
+        <pre>&lt;svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;
+    &lt;path d="M22 14H34M19 22V42C19 43.1 19.9 44 21 44H35C36.1 44 37 43.1 37 42V22M24 28V38M32 28V38" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/&gt;
+    &lt;path d="M18 22H38L36.5 45C36.3 46.7 34.7 48 33 48H23C21.3 48 19.7 46.7 19.5 45L18 22Z" fill="white" opacity="0.2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/&gt;
+&lt;/svg&gt;</pre>
+    </div>
+</body>
+</html>
