@@ -70,7 +70,9 @@ app.get('/financial', (req, res) => {
 });
 
 // Serve static files (CSS, JS, images)
-app.use(express.static(path.join(__dirname, '../frontend')));
+const frontendPath = path.resolve(__dirname, '../frontend');
+console.log('Serving static files from:', frontendPath);
+app.use(express.static(frontendPath));
 
 // Error handling
 app.use((err, req, res, next) => {
