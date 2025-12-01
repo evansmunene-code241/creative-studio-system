@@ -229,7 +229,10 @@ function deleteFile(fileId) {
   .catch(err => showAlert('Delete error: ' + err.message, 'error'));
 }
 
-// Backup functions
+// Backup functions with real-time auto-refresh
+let backupRefreshInterval = null;
+const BACKUP_REFRESH_INTERVAL = 5000; // 5 seconds
+
 function loadBackups() {
   const backupList = document.getElementById('backupListTab');
   
@@ -252,6 +255,30 @@ function loadBackups() {
       backupList.innerHTML = '<p style="text-align: center; color: #999;">No backups yet</p>';
     }
   });
+}
+
+// Start auto-refresh for backup history
+function startBackupAutoRefresh() {
+  // Stop any existing interval
+  if (backupRefreshInterval) {
+    clearInterval(backupRefreshInterval);
+  }
+  
+  // Load immediately
+  loadBackups();
+  
+  // Then refresh every 5 seconds
+  backupRefreshInterval = setInterval(() => {
+    loadBackups();
+  }, BACKUP_REFRESH_INTERVAL);
+}
+
+// Stop auto-refresh
+function stopBackupAutoRefresh() {
+  if (backupRefreshInterval) {
+    clearInterval(backupRefreshInterval);
+    backupRefreshInterval = null;
+  }
 }
 
 function displayBackups(backups) {
@@ -442,6 +469,11 @@ function escapeHtml(text) {
 }
 
 function showTab(tabName) {
+  // Stop backup auto-refresh if switching away
+  if (tabName !== 'backups') {
+    stopBackupAutoRefresh();
+  }
+
   // Always show overview tab
   document.getElementById('overviewTab').style.display = 'block';
   
@@ -468,7 +500,8 @@ function showTab(tabName) {
   } else if (tabName === 'backups') {
     document.getElementById('backupsTab').style.display = 'block';
     navItems[2].classList.add('active');
-    setTimeout(loadBackups, 100);
+    // Start real-time auto-refresh for backup history
+    startBackupAutoRefresh();
   } else if (tabName === 'profile') {
     document.getElementById('profileTab').style.display = 'block';
     navItems[3].classList.add('active');
