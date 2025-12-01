@@ -1143,10 +1143,7 @@ table td {
 #filesTab,
 #backupsTab,
 #profileTab {
-  position: absolute;
-  top: 0;
-  left: 280px;
-  right: 0;
+  position: relative;
   z-index: 10;
   background: #fafbfc;
 }
